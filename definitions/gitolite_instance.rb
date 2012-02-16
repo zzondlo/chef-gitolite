@@ -4,7 +4,7 @@ define :gitolite_instance, :admin_key => nil do
     comment "gitolite user - #{params[:user]} "
     home "/home/#{params[:user]}"
     shell "/bin/bash"
-	  system true
+    system true
     action :create
   end
 
