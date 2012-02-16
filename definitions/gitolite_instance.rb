@@ -20,13 +20,18 @@ define :gitolite_instance do
       source "gitolite.rc.erb"
       action :create
   end
-  
+
+if params[:admin_key] = nil
+  # try and read the key
+  params[:admin_key] = IO.read("/home/params[:admin]/.ssh/id_rsa.pub")
+end
+ 
   # prepare admin key
   file "/tmp/gitolite-#{params[:admin]}.pub" do
     owner params[:user]
     content params[:admin_key]
   end
-  
+
   # Installing gitolite
   execute "installing_gitolite_for" do
     user params[:user]
