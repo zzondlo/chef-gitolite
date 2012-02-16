@@ -21,10 +21,13 @@ define :gitolite_instance, :admin_key => nil do
       action :create
   end
 
-  # Try to read key from admin user's home folder
-  if params[:admin_key].nil?
-    # try and read the key
-    params[:admin_key] = IO.read("/home/#{params[:admin]}/.ssh/id_rsa.pub")
+  # if no admin_key is specified default is to read it from admin user's home
+  ruby_block "read key from file if nil" do
+    block do 
+      if params[:admin_key].nil?
+        params[:admin_key] = IO.read("/home/#{params[:admin]}/.ssh/id_rsa.pub")
+      end
+    end
   end
  
   # prepare admin key
