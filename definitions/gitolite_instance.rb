@@ -1,16 +1,19 @@
 define :gitolite_instance, :admin_key => nil do
   # Create the user
   user params[:user] do
+    gid params[:user]
     comment "gitolite user - #{params[:user]} "
     home "/home/#{params[:user]}"
     shell "/bin/bash"
-    system true
     action :create
+    system true
+    password nil
   end
 
   # And its folder
   directory "/home/#{params[:user]}" do
     owner params[:user]
+    group params[:user]
     action :create
   end
   
@@ -21,19 +24,15 @@ define :gitolite_instance, :admin_key => nil do
       action :create
   end
 
-  # if no admin_key is specified default is to read it from admin user's home
-  ruby_block "read key from file if nil" do
-    block do 
-      if params[:admin_key].nil?
-        params[:admin_key] = IO.read("/home/#{params[:admin]}/.ssh/id_rsa.pub")
-      end
-    end
-  end
- 
   # prepare admin key
   file "/tmp/gitolite-#{params[:admin]}.pub" do
     owner params[:user]
-    content params[:admin_key]
+    if params[:admin_key].nil?
+      key=IO.read("/home/#{params[:admin]}/.ssh/id_rsa.pub")
+    else
+      key = params[:admin_key]
+    end
+    content key
   end
 
   # Installing gitolite
