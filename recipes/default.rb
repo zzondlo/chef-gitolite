@@ -1,4 +1,4 @@
-require_recipe "git"
+include_recipe "git"
 
 bash 'install_gitolite' do
   cwd "/tmp"
@@ -7,8 +7,8 @@ bash 'install_gitolite' do
     git clone git://github.com/sitaramc/gitolite gitolite-source
     cd gitolite-source
     git checkout -t -f origin/pu
-    mkdir -p /usr/local/share/gitolite/conf /usr/local/share/gitolite/hooks
-    src/gl-system-install /usr/local/bin /usr/local/share/gitolite/conf /usr/local/share/gitolite/hooks
+    mkdir -p #{node[:gitolite][:path][:conf]} #{node[:gitolite][:path][:hook]}
+    src/gl-system-install #{node[:gitolite][:path][:bin]} #{node[:gitolite][:path][:conf]} #{node[:gitolite][:path][:hook]}
   EOH
   creates '/usr/local/bin/gl-setup'
 end

@@ -1,19 +1,14 @@
 define :gitolite_instance, :admin_key => nil do
   # Create the user
   user params[:user] do
-    gid params[:user]
-    comment "gitolite user - #{params[:user]} "
+    comment "gitolite user - #{params[:user]}"
     home "/home/#{params[:user]}"
     shell "/bin/bash"
-    action :create
-    system true
-    password nil
   end
 
   # And its folder
   directory "/home/#{params[:user]}" do
     owner params[:user]
-    group params[:user]
     action :create
   end
   
