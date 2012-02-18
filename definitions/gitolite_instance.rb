@@ -1,4 +1,4 @@
-define :gitolite_instance, :admin_key => nil do
+define :gitolite_instance do
   # Create the user
   user params[:user] do
     comment "gitolite user - #{params[:user]}"
@@ -22,12 +22,7 @@ define :gitolite_instance, :admin_key => nil do
   # prepare admin key
   file "/tmp/gitolite-#{params[:admin]}.pub" do
     owner params[:user]
-    if params[:admin_key].nil?
-      key=IO.read("/home/#{params[:admin]}/.ssh/id_rsa.pub")
-    else
-      key = params[:admin_key]
-    end
-    content key
+    content params[:admin_key]
   end
 
   # Installing gitolite
